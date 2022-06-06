@@ -11,7 +11,12 @@ RUN apt-get update -yq && \
     pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-COPY ["app.py", "config", "./"]
+RUN mkdir -p /app/config/ && \
+    mkdir -p /app/templates/
+
+COPY ["app.py", "VideoStreamSubscriber.py", "./"]
+
+COPY ["templates/index.html", "templates/"]
 
 VOLUME ["/app/config"]
 
