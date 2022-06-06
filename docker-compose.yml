@@ -1,0 +1,10 @@
+version: "3.3"
+services:
+  cam-stream-webserver-01:
+    build: .
+    container_name: cam-stream-webserver-01
+    volumes:
+      - "./config/:/app/config/"
+    ports:
+      - "5000:5000"
+    restart: always
