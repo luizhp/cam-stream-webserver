@@ -1,15 +1,12 @@
 from flask import Flask, render_template, Response
-import configparser
+from Config import Config
 from VideoStreamSubscriber import VideoStreamSubscriber
 
 app = Flask(__name__)
+config = Config()
 
-config = configparser.ConfigParser()
-config.read('config/app.ini')
-HOSTNAME = config['PUBLISHER']['HOSTNAME']
-PORT = int(config['PUBLISHER']['PORT'])
-
-receiver = VideoStreamSubscriber(HOSTNAME, PORT)
+receiver = VideoStreamSubscriber(config.get(
+    'PUBLISHER', 'HOSTNAME'), config.get('PUBLISHER', 'PORT'))
 
 
 def gen():
@@ -22,13 +19,13 @@ def gen():
 
 @ app.route('/')
 def index():
-    # """Video streaming"""
+    """ Video streaming """
     return render_template('index.html')
 
 
 @ app.route('/video_feed')
 def video_feed():
-    # """Video streaming route. Put this in the src attribute of an img tag."""
+    """ Video streaming route. Put this in the src attribute of an img tag. """
     return Response(gen(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
