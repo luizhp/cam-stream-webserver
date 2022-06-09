@@ -5,6 +5,7 @@ services:
     container_name: cam-stream-webserver-01
     volumes:
       - "./config/:/app/config/"
+      - "/etc/localtime:/etc/localtime:ro"
     ports:
       - "5000:5000"
     restart: unless-stopped
