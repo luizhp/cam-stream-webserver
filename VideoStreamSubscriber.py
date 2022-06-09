@@ -1,6 +1,7 @@
 import socket
 import imagezmq
 import threading
+from utilities import util
 
 
 class VideoStreamSubscriber:
@@ -19,13 +20,14 @@ class VideoStreamSubscriber:
     def receive(self, timeout=15.0):
         flag = self._data_ready.wait(timeout=timeout)
         if not flag:
-            raise TimeoutError(
-                "Timeout while reading from subscriber tcp://{}:{}".format(self.hostname, self.port))
+            errmsg = "Timeout while reading from subscriber tcp://{}:{}".format(
+                self.hostname, self.port)
+            util.get_logger('cam-stream-webserver').error(errmsg)
+            raise TimeoutError(errmsg)
         self._data_ready.clear()
         return self._data
 
     def _run(self):
-
         while not self._stop:
             self._data = self.receiver.recv_jpg()
             self._data_ready.set()

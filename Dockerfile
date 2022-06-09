@@ -14,7 +14,7 @@ RUN apt-get update -yq && \
 RUN mkdir -p /app/config/ && \
     mkdir -p /app/templates/
 
-COPY ["app.py", "VideoStreamSubscriber.py", "./"]
+COPY ["app.py", "VideoStreamSubscriber.py", "utilities.py", "Config.py", "./"]
 
 COPY ["templates/index.html", "templates/"]
 
