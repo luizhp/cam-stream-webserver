@@ -14,8 +14,6 @@ class VideoStreamSubscriber:
         self._thread = threading.Thread(target=self._run, args=())
         self._thread.daemon = True
         self._thread.start()
-        self.receiver = imagezmq.ImageHub(
-            "tcp://{}:{}".format(self.hostname, self.port), REQ_REP=False)
 
     def receive(self, timeout=15.0):
         flag = self._data_ready.wait(timeout=timeout)
@@ -28,10 +26,12 @@ class VideoStreamSubscriber:
         return self._data
 
     def _run(self):
+        receiver = imagezmq.ImageHub(
+            "tcp://{}:{}".format(self.hostname, self.port), REQ_REP=False)
         while not self._stop:
-            self._data = self.receiver.recv_jpg()
+            self._data = receiver.recv_jpg()
             self._data_ready.set()
-        self.receiver.close()
+        receiver.close()
 
     def close(self):
         self._stop = True
